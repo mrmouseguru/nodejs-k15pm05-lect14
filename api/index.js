@@ -51,9 +51,10 @@ myApi.get("/students", async (req, res) => {
 });
 
 /* Middleware */
-myApi.use("/students/:id", (req, res, next) => {
+myApi.use("/students/:id", async (req, res, next) => {
   let id = req.params.id;
-  let student = STUDENTS[id];
+  //let student = STUDENTS[id];
+  let student = await studentColl.findOne({id : id});
   if (!student) {
     res.status(404).json({ error: "Unknown student" });
     return;
