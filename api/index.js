@@ -1,5 +1,6 @@
 import bodyParser from "body-parser";
 import express from "express";
+import { MongoClient } from "mongodb";
 
 const DATABASE_NAME = "lect14_db";
 
@@ -15,8 +16,13 @@ for (let [givenName, surname] of NAMES) {
 }
 
 let myApi = express.Router();
-const initApi = (app) => {
+let studentColl;
+const initApi = async (app) => {
   app.use("/api", myApi);
+
+  let conn = await MongoClient.connect("mongodb://127.0.0.1");
+  let db = conn.db(DATABASE_NAME);
+  studentColl = db.collection("students");
 };
 
 /* Interpret request bodies as JSON and store them in req.body */
@@ -26,17 +32,21 @@ myApi.get("/", (req, res) => {
   res.json({ message: "Hello, world!" });
 });
 
-myApi.get("/students", (req, res) => {
-  let students = Object.values(STUDENTS);
+myApi.get("/students", async (req, res) => {
+  //let students = Object.values(STUDENTS);
+  //mongo=> lect14_db => students
+  let allStudents = await studentColl.find().toArray();
   let search = req.query.q;
+  let students = allStudents;
   if (search) {
     students = [];
-    for (let student of Object.values(STUDENTS)) {
+    for (let student of allStudents) {
       /* Check if the query is contained in each student's name */
       let name = `${student.givenName} ${student.surname}`.toLowerCase();
       if (name.includes(search.toLowerCase())) students.push(student);
     }
   }
+  console.log(students);
   res.json({ students });
 });
 

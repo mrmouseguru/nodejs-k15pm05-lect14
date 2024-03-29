@@ -1,4 +1,5 @@
 export default class Student {
+  
   static async list(search) {
     let res = await fetch(`/api/students?q=${search}`);
     let data = await res.json();
