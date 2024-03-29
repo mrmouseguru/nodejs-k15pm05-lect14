@@ -17,12 +17,14 @@ for (let [givenName, surname] of NAMES) {
 
 let myApi = express.Router();
 let studentColl;
+let enrollmentColl;
 const initApi = async (app) => {
   app.use("/api", myApi);
 
   let conn = await MongoClient.connect("mongodb://127.0.0.1");
   let db = conn.db(DATABASE_NAME);
   studentColl = db.collection("students");
+  enrollmentColl = db.collection("enrollments");
 };
 
 /* Interpret request bodies as JSON and store them in req.body */
@@ -78,9 +80,17 @@ myApi.patch("/students/:id", (req, res) => {
 
 /*** This part was added after lecture ***/
 
-myApi.get("/students/:id/courses", (req, res) => {
+myApi.get("/students/:id/courses", async (req, res) => {
   let student = res.locals.student;
-  let courses = COURSES[student.id];
+  //let courses = COURSES[student.id];
+ let enrollDocs = await enrollmentColl.
+        find({studentId : student.id}).toArray();
+  let courses = [];
+
+  for(let doc of enrollDocs){
+    courses.push({code : doc.code, units : doc.units});
+  }
+
   res.json({ courses: courses });
 });
 
