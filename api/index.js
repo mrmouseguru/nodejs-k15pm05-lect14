@@ -72,9 +72,11 @@ myApi.get("/students/:id", (req, res) => {
   res.json(student);
 });
 
-myApi.patch("/students/:id", (req, res) => {
+myApi.patch("/students/:id", async (req, res) => {
   let student = res.locals.student;
   student.dept = req.body.dept;
+  //update
+  await studentColl.replaceOne({id : student.id}, student);
   res.json(student);
 });
 
