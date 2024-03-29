@@ -1,0 +1,13 @@
+db = connect("lect14_db");
+db.dropDatabase()
+db.students.insertMany([
+  { id: "mchang", givenName: "Michael", surname: "Chang", dept: null, units: 8 },
+  { id: "nkishnani", givenName: "Neel", surname: "Kishnani", dept: null, units: 5 },
+  { id: "knazir", givenName: "Kashif", surname: "Nazir", dept: null, units: 3 }
+]);
+db.enrollments.insertMany([
+  { studentId: "mchang", code: "CS107", units: 5 },
+  { studentId: "mchang", code: "CS193X", units: 3 },
+  { studentId: "nkishnani", code: "CS106B", units: 5 },
+  { studentId: "knazir", code: "CS193X", units: 3 }
+]);

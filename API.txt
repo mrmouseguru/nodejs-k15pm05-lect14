@@ -1,0 +1,43 @@
+GET /
+-----
+Test endpoint. Always returns the same thing.
+
+GET /students
+-------------
+Query string:
+  q (optional): search string
+Return a list of students, optionally whose names contain the search string.
+
+GET /students/:id
+-----------------
+Parameters:
+  id: student ID
+Errors
+  404: id doesn't match a student in the system
+Return the student object with the given ID.
+
+GET /students/:id/courses
+-----------------
+Parameters:
+  id: student ID
+Errors
+  404: id doesn't match a student in the system
+Return a list of courses the student has taken
+
+POST /students/:id/courses
+--------------------------
+Parameters:
+  id: student ID
+Request body:
+  code: the course code (e.g. "CS193X")
+  units: number of units
+Add a course to a student's record. Increases the student's unitsCompleted by the given number of units.
+Returns the object `{ "success": true }`.
+
+PATCH /students/:id
+-------------------
+Parameters:
+  id: student ID
+Request body:
+  dept: department name
+Update the student's department. Returns the updated student object, in the same format as `GET /students/:id`.
